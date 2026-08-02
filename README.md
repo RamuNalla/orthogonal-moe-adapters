@@ -1,0 +1,1 @@
+ Parameter-Efficient Fine-Tuning (PEFT) framework that injects a Mixture-of-Experts (MoE) Adapter layer into frozen LLM blocks.
