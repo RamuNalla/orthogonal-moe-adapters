@@ -58,8 +58,8 @@ class ContinualMoETrainer:
             progress_bar = tqdm(dataloader, desc=f"Epoch {epoch+1}/{epochs} [{task_name}]")
             
             for batch in progress_bar:
-                # Move batch to device (assuming batch is a tensor of input_ids)
-                inputs = batch.to(self.device)
+                # TensorDataset returns a list of tensors; unpack the first element (input_ids)
+                inputs = batch[0].to(self.device)
                 
                 # Forward pass
                 outputs = self.model(inputs, labels=inputs)
