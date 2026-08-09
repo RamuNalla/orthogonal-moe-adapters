@@ -15,7 +15,7 @@ class AdapterInjectedLinear(nn.Module):
         if self.original_layer.bias is not None:
             self.original_layer.bias.requires_grad = False
             
-        hidden_dim = original_layer.in_features
+        hidden_dim = original_layer.out_features  # adapter lives in output space
         
         # Attach the MoE Adapter
         self.moe_adapter = MoEAdapterLayer(
@@ -31,7 +31,8 @@ class AdapterInjectedLinear(nn.Module):
         base_output = self.original_layer(x)
         
         # 2. Adapter forward pass (TRAINABLE)
-        adapter_output = self.moe_adapter(x)
+        # Adapter runs on base_output so both tensors share the same out_features dim
+        adapter_output = self.moe_adapter(base_output)
         
         # 3. Combine
         return base_output + (self.scaling * adapter_output)
