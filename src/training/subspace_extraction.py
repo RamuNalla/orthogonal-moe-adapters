@@ -14,8 +14,10 @@ class SubspaceExtractor:
 
     def _get_hook(self, name: str):
         def hook(module, inp, output):
-            x = inp[0].detach().float() # Shape: (batch, seq, hidden_dim)
-            x_flat = x.view(-1, x.size(-1)) # Shape: (tokens, hidden_dim)
+            # Use the output (base_output + adapter_output) which is in out_features space (2048).
+            # inp[0] is in in_features space (5632) which mismatches the adapter's hidden_dim.
+            x = output.detach().float() # Shape: (batch, seq, out_features)
+            x_flat = x.view(-1, x.size(-1)) # Shape: (tokens, out_features)
             
             # Incremental Covariance: X^T * X
             cov_update = torch.matmul(x_flat.t(), x_flat)
