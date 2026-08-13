@@ -8,3 +8,11 @@ Every time you fine-tune an LLM on something new, it quietly forgets what it alr
 Most PEFT methods like LoRA reduce the number of trainable parameters, but they don't actually protect the knowledge the base model already holds. The gradients still flow freely into the same directions the pretrained model relies on.
 
 This project takes a different approach. We first study where a pretrained model concentrates its learned representations — its principal activation directions — and then hard-constrain every adapter gradient to be strictly orthogonal to those directions. On top of that, a Mixture-of-Experts router assigns each new task its own dedicated expert, which gets frozen once training is done. The result: new skills are learned in the free space the model wasn't using, and old skills stay exactly where they were. 
+
+## 📐 Mathematical Formulation
+
+### 1. The Core Knowledge Subspace (SVD)
+Before training, we capture the base model's core knowledge by computing the covariance matrix of its activations on a general corpus (e.g., Wikipedia). We extract the top-$k$ principal components via Singular Value Decomposition (SVD):
+$$ C = \frac{1}{N} \sum_{i=1}^{N} x_i x_i^T $$
+$$ C = U \Sigma V^T $$
+Where $U$ represents the orthonormal basis of the foundation model's knowledge space.
