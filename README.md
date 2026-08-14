@@ -16,3 +16,8 @@ Before training, we capture the base model's core knowledge by computing the cov
 $$ C = \frac{1}{N} \sum_{i=1}^{N} x_i x_i^T $$
 $$ C = U \Sigma V^T $$
 Where $U$ represents the orthonormal basis of the foundation model's knowledge space.
+
+### 2. Orthogonal Gradient Projection
+During the fine-tuning backward pass, standard gradients $G$ will inherently push the model away from $U$. We intercept the optimizer step and project the adapter gradients $G$ into the null space of $U$:
+$$ G_{\perp} = G - G U U^T $$
+This ensures that $\nabla W \cdot U = 0$. The new task learns strictly in the orthogonal subspace, making interference mathematically impossible.
