@@ -25,19 +25,29 @@ This is *Catastrophic Forgetting* — and it is the reason deploying a single mo
 
 ### 1. The Core Knowledge Subspace (SVD)
 Before training, I capture the base model's core knowledge by computing the covariance matrix of its activations on a general corpus (e.g., Wikipedia). I extract the top-$k$ principal components via Singular Value Decomposition (SVD):
-$$ C = \frac{1}{N} \sum_{i=1}^{N} x_i x_i^T $$
-$$ C = U \Sigma V^T $$
+```math
+C = \frac{1}{N} \sum_{i=1}^{N} x_i x_i^T
+```
+```math
+C = U \Sigma V^T
+```
 Where $U$ represents the orthonormal basis of the foundation model's knowledge space.
 
 ### 2. Orthogonal Gradient Projection
 During the fine-tuning backward pass, standard gradients $G$ will inherently push the model away from $U$. I intercept the optimizer step and project the adapter gradients $G$ into the null space of $U$:
-$$ G_{\perp} = G - G U U^T $$
+```math
+G_{\perp} = G - G U U^T
+```
 This ensures that $\nabla W \cdot U = 0$. The new task learns strictly in the orthogonal subspace, making interference mathematically impossible.
 
 ### 3. Mixture-of-Experts (MoE) Routing
 To learn multiple disjoint tasks (e.g., Medical and SQL) efficiently, tokens are dynamically routed via a trainable gate $W_g$ to the top-$K$ bottleneck experts $E_i$:
-$$ P(x) = \text{Softmax}(W_g \cdot x) $$
-$$ y = x_{base} + \sum_{i \in \text{Top-K}} P_i(x) \cdot E_i(x) $$
+```math
+P(x) = \text{Softmax}(W_g \cdot x)
+```
+```math
+y = x_{\text{base}} + \sum_{i \in \text{Top-K}} P_i(x) \cdot E_i(x)
+```
 
 ## Benchmarking
 
