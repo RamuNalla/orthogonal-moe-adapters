@@ -84,7 +84,7 @@ Metric used is **perplexity** — lower means the model understands the domain b
 - `src/training/subspace_extraction.py`: Forward hooks for incremental covariance computation and SVD.
 - `src/training/orthogonal_optimizer.py`: Custom PyTorch backward hooks to enforce $G_{\perp}$.
 
-## ⚙️ Quick Start
+## Quick Start
 
 ```bash
 # Clone the repo
