@@ -73,3 +73,33 @@ Metric used is **perplexity** — lower means the model understands the domain b
 - `src/architecture/`: PyTorch definitions for Top-K routing gates and dynamically injected bottleneck layers.
 - `src/training/subspace_extraction.py`: Forward hooks for incremental covariance computation and SVD.
 - `src/training/orthogonal_optimizer.py`: Custom PyTorch backward hooks to enforce $G_{\perp}$.
+
+## ⚙️ Quick Start
+
+```bash
+# Clone the repo
+git clone https://github.com/RamuNalla/orthogonal-moe-adapters.git
+cd orthogonal-moe-adapters
+
+# Install dependencies (PyTorch, Transformers, datasets)
+pip install torch transformers datasets tqdm
+```
+
+Then run the three phases in order:
+
+```bash
+# Phase 1 — Verify adapter injection and forward pass
+python test_1.py
+
+# Phase 2 — Verify orthogonal gradient projection (mathematical proof)
+python test_2.py
+
+# Phase 3 — Full continual learning pipeline (SVD → Train Medical → Train SQL → Save adapters)
+python test_3.py
+```
+
+To run the orthogonality unit tests:
+
+```bash
+pytest tests/
+```
