@@ -80,7 +80,8 @@ Metric used is **perplexity** — lower means the model understands the domain b
 </p>
 
 ## System Architecture
-- `src/architecture/`: PyTorch definitions for Top-K routing gates and dynamically injected bottleneck layers.
+- `src/architecture/injector.py`: Wraps target linear layers with `AdapterInjectedLinear`, freezes the base weights, and recursively injects MoE adapters into the model.
+- `src/architecture/moe_adapter.py`: PyTorch definitions for Top-K routing gates and dynamically injected bottleneck expert layers.
 - `src/training/subspace_extraction.py`: Forward hooks for incremental covariance computation and SVD.
 - `src/training/orthogonal_optimizer.py`: Custom PyTorch backward hooks to enforce $G_{\perp}$.
 
